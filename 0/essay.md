@@ -7,6 +7,8 @@ Devtools: Erlang/OTP
 
 Линтер: erl\_lint
 
+Фреймворк для тестирования: EUnit
+
 Выбранная книга: [Джо Армстронг | Программирование на Эрланге](https://github.com/dyp2000/Russian-Armstrong-Erlang)
 
 
