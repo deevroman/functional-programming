@@ -7,7 +7,7 @@ Devtools: Erlang/OTP
 
 Линтер: erl\_lint
 
-Выбранная книга: Джо Армстронг | Программирование на Эрланге
+Выбранная книга: [Джо Армстронг | Программирование на Эрланге](https://github.com/dyp2000/Russian-Armstrong-Erlang)
 
 
 ## Почему Erlang, а не %language-name?
