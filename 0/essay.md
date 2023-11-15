@@ -3,13 +3,13 @@
 
 Выбранный язык: Erlang
 
-Devtools: Erlang/OTP
+Devtools: Erlang/OTP, Rebar3
 
-Линтер: erl\_lint
+Линтер: elvis
 
 Фреймворк для тестирования: EUnit
 
-Выбранная книга: [Джо Армстронг | Программирование на Эрланге](https://github.com/dyp2000/Russian-Armstrong-Erlang)
+Выбранная книга: Introducing Erlang GETTING STARTED IN FUNCTIONAL PROGRAMMING Simon St.Laurent
 
 
 ## Почему Erlang, а не %language-name?
