@@ -1,4 +1,4 @@
-### Функциональное программирование. Лабораторная работа №1
+# Функциональное программирование. Лабораторная работа №1
 
 Вариант: 5, 26
 
@@ -32,14 +32,14 @@
 - нужно знать особенности используемой технологии и того, как работают использованные вами приёмы.
 
 
-### Задача 5. Smallest Multiple
+## Задача 5. Smallest Multiple
 
 <p>2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.</p>
 <p>What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?</p>
 
 https://projecteuler.net/problem=5
 
-#### Реализация на Python
+### Реализация на Python
 
 ```python
 def gcd(a, b):
@@ -58,7 +58,7 @@ print(reduce(lcm, list(range(1, 20))))
 
 ```232792560```
 
-#### Реализация с хвостовой рекурсией
+### Реализация с хвостовой рекурсией
 
 ```erlang
 gcd(0, Y) -> Y;
@@ -74,7 +74,7 @@ smallest_divisible_tail_rec(N) -> lcm(N, 1).
 smallest_divisible_tail_rec() -> lcm(20, 1).
 ```
 
-#### Реализация со свёрткой
+### Реализация со свёрткой
 
 ```erlang
 gcd(0, Y) -> Y;
@@ -90,7 +90,7 @@ smallest_divisible_reduce() ->
 
 ```
 
-### Задача 26. Reciprocal Cycles
+## Задача 26. Reciprocal Cycles
 
 A unit fraction contains in the numerator. The decimal representation of the unit fractions with denominators to are given:
 
@@ -112,7 +112,7 @@ Find the value of d < 1000 for which 1/d contains the longest recurring cycle in
 
 https://projecteuler.net/problem=26
 
-#### Реализация на Python
+### Реализация на Python
 
 ```python
 def get_period(x):
@@ -137,7 +137,7 @@ print(max(enumerate(map(get_period, list(range(1, 1000)))), key=lambda x: x[1])[
 
 ```982```
 
-#### Реализация с хвостовой рекурсией
+### Реализация с хвостовой рекурсией
 
 ```erlang
 rec_div_five(N) ->
@@ -185,7 +185,7 @@ find_number_with_max_period_tail_rec() ->
   find_number_with_max_period_tail_rec(1000).
 ```
 
-#### Реализация с fold
+### Реализация с fold
 
 ```erlang
 
@@ -234,7 +234,7 @@ find_number_with_max_period_fold() ->
 
 ```
 
-#### Реализация с map
+### Реализация с map
 ```erlang
 rec_div_five(N) ->
   case N rem 5 of
