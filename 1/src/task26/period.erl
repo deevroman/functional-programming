@@ -58,8 +58,8 @@ find_number_with_max_period_fold() ->
 get_max_period_tail_rec(Index, _) when Index == 1 -> {1, 0};
 
 get_max_period_tail_rec(Index, Acc) when Index > 1 ->
-  NewAcc = get_max_period_tail_rec(Index - 1, Acc),
-  pair_max(element(1, NewAcc), element(2, NewAcc), get_period(Index), Index).
+  {Value, I} = get_max_period_tail_rec(Index - 1, Acc),
+  pair_max(Value, I, get_period(Index), Index).
 
 find_number_with_max_period_tail_rec(N) ->
   element(2, get_max_period_tail_rec(N, {1, 0})).
