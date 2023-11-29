@@ -2,19 +2,23 @@
 
 Вариант: 5, 26
 
-Цель: освоить базовые приёмы и абстракции функционального программирования: функции, поток управления и поток данных, сопоставление с образцом, рекурсия, свёртка, отображение, работа с функциями как с данными, списки.
+Цель: освоить базовые приёмы и абстракции функционального программирования: функции, поток управления и поток данных,
+сопоставление с образцом, рекурсия, свёртка, отображение, работа с функциями как с данными, списки.
 
-В рамках лабораторной работы вам предлагается решить несколько задач [проекта Эйлер](https://projecteuler.net/archives). Список задач -- ваш вариант.
+В рамках лабораторной работы вам предлагается решить несколько задач [проекта Эйлер](https://projecteuler.net/archives).
+Список задач -- ваш вариант.
 
 Для каждой проблемы должно быть представлено несколько решений:
 
 1. монолитные реализации с использованием:
     - хвостовой рекурсии;
     - рекурсии (вариант с хвостовой рекурсией не является примером рекурсии);
-2. модульной реализации, где явно разделена генерация последовательности, фильтрация и свёртка (должны использоваться функции reduce/fold, filter и аналогичные);
+2. модульной реализации, где явно разделена генерация последовательности, фильтрация и свёртка (должны использоваться
+   функции reduce/fold, filter и аналогичные);
 3. генерация последовательности при помощи отображения (map);
 4. работа со спец. синтаксисом для циклов (где применимо);
-5. работа с бесконечными списками для языков, поддерживающих ленивые коллекции или итераторы как часть языка (к примеру Haskell, Clojure);
+5. работа с бесконечными списками для языков, поддерживающих ленивые коллекции или итераторы как часть языка (к примеру
+   Haskell, Clojure);
 6. реализация на любом удобном для вас традиционном языке программирования для сравнения.
 
 Требуется использовать идиоматичный для технологии стиль программирования.
@@ -30,7 +34,6 @@
 
 - необходимо понимание разницы между ленивыми коллекциями и итераторами;
 - нужно знать особенности используемой технологии и того, как работают использованные вами приёмы.
-
 
 ## Задача 5. Smallest Multiple
 
@@ -57,6 +60,20 @@ print(reduce(lcm, list(range(1, 20))))
 Результат:
 
 ```232792560```
+
+### Реализация рекурсией
+
+```erlang
+gcd(0, Y) -> Y;
+gcd(X, 0) -> X;
+gcd(X, Y) when X > Y -> gcd(Y, X);
+gcd(X, Y) -> gcd(Y rem X, X).
+
+lcm_rec(1) -> 1;
+lcm_rec(N) -> N div gcd(N, lcm_rec(N - 1)) * lcm_rec(N - 1).
+
+smallest_divisible_rec() -> lcm_rec(20).
+```
 
 ### Реализация с хвостовой рекурсией
 
@@ -92,9 +109,12 @@ smallest_divisible_reduce() ->
 
 ## Задача 26. Reciprocal Cycles
 
-A unit fraction contains in the numerator. The decimal representation of the unit fractions with denominators to are given:
+A unit fraction contains in the numerator. The decimal representation of the unit fractions with denominators to are
+given:
 
-A unit fraction contains 1 in the numerator. The decimal representation of the unit fractions with denominators 2 to 10 are given:
+A unit fraction contains 1 in the numerator. The decimal representation of the unit fractions with denominators 2 to 10
+are given:
+
 ```
 1/2 = 0.5
 1/3 = 0.(3)
@@ -106,6 +126,7 @@ A unit fraction contains 1 in the numerator. The decimal representation of the u
 1/9 = 0.(1)
 1/10 = 0.1
 ```
+
 Where 0.1(6) means 0.166666, and has a 1-digit recurring cycle. It can be seen that 1/7 has a 6-digit recurring cycle.
 
 Find the value of d < 1000 for which 1/d contains the longest recurring cycle in its decimal fraction part.
@@ -175,8 +196,8 @@ pair_max(X, XIndex, Y, YIndex) ->
 get_max_period_tail_rec(Index, _) when Index == 1 -> {1, 0};
 
 get_max_period_tail_rec(Index, Acc) when Index > 1 ->
-   {Value, I} = get_max_period_tail_rec(Index - 1, Acc),
-   pair_max(Value, I, get_period(Index), Index).
+  {Value, I} = get_max_period_tail_rec(Index - 1, Acc),
+  pair_max(Value, I, get_period(Index), Index).
 
 find_number_with_max_period_tail_rec(N) ->
   element(2, get_max_period_tail_rec(N, {1, 0})).
@@ -235,6 +256,7 @@ find_number_with_max_period_fold() ->
 ```
 
 ### Реализация с map
+
 ```erlang
 rec_div_five(N) ->
   case N rem 5 of
@@ -274,4 +296,5 @@ find_number_with_max_period() ->
 
 ## Выводы
 
-В ходе выполнения работы я познакомился с языком Erlang и основными принципами функционального программирования. Реализовал в нескольких разных стилях две задачи из проекта Эйлер
+В ходе выполнения работы я познакомился с языком Erlang и основными принципами функционального программирования.
+Реализовал в нескольких разных стилях две задачи из проекта Эйлер

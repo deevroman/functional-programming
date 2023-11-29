@@ -35,9 +35,9 @@ find_number_with_max_period(N) ->
   Arr = lists:map(fun(X) -> get_period(X) end, lists:seq(1, N)),
   string:str(Arr, [lists:max(Arr)]).
 
+%%% №1
 find_number_with_max_period() ->
   find_number_with_max_period(1000).
-
 
 pair_max(X, XIndex, Y, YIndex) ->
   case X > Y of
@@ -52,6 +52,7 @@ find_number_with_max_period_fold(N) ->
     lists:seq(1, N)
   )).
 
+%%% №2
 find_number_with_max_period_fold() ->
   find_number_with_max_period_fold(1000).
 
@@ -64,5 +65,6 @@ get_max_period_tail_rec(Index, Acc) when Index > 1 ->
 find_number_with_max_period_tail_rec(N) ->
   element(2, get_max_period_tail_rec(N, {1, 0})).
 
+%%% №3
 find_number_with_max_period_tail_rec() ->
   find_number_with_max_period_tail_rec(1000).
