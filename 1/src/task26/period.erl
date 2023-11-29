@@ -1,9 +1,9 @@
 -module(period).
 
 %% API
--export([find_number_with_max_period/0]).
+-export([find_number_with_max_period_rec/0]).
 -export([find_number_with_max_period_fold/0]).
--export([find_number_with_max_period_tail_rec/0]).
+-export([find_number_with_max_period_map/0]).
 
 rec_div_five(N) ->
   case N rem 5 of
@@ -31,14 +31,20 @@ get_period(X) when X == 0 -> 0;
 
 get_period(X) -> try_period_len(div_five_and_two(X), 10, 1).
 
-find_number_with_max_period(N) ->
-  Arr = lists:map(fun(X) -> get_period(X) end, lists:seq(1, N)),
-  string:str(Arr, [lists:max(Arr)]).
-
 %%% №1
-find_number_with_max_period() ->
-  find_number_with_max_period(1000).
+get_max_period_rec(Index, _) when Index == 1 -> {1, 0};
 
+get_max_period_rec(Index, Acc) when Index > 1 ->
+  {Value, I} = get_max_period_rec(Index - 1, Acc),
+  pair_max(Value, I, get_period(Index), Index).
+
+find_number_with_max_period_rec(N) ->
+  element(2, get_max_period_rec(N, {1, 0})).
+
+find_number_with_max_period_rec() ->
+  find_number_with_max_period_rec(1000).
+
+%%% №2
 pair_max(X, XIndex, Y, YIndex) ->
   case X > Y of
     true -> {X, XIndex};
@@ -52,19 +58,13 @@ find_number_with_max_period_fold(N) ->
     lists:seq(1, N)
   )).
 
-%%% №2
 find_number_with_max_period_fold() ->
   find_number_with_max_period_fold(1000).
 
-get_max_period_tail_rec(Index, _) when Index == 1 -> {1, 0};
-
-get_max_period_tail_rec(Index, Acc) when Index > 1 ->
-  {Value, I} = get_max_period_tail_rec(Index - 1, Acc),
-  pair_max(Value, I, get_period(Index), Index).
-
-find_number_with_max_period_tail_rec(N) ->
-  element(2, get_max_period_tail_rec(N, {1, 0})).
-
 %%% №3
-find_number_with_max_period_tail_rec() ->
-  find_number_with_max_period_tail_rec(1000).
+find_number_with_max_period_map(N) ->
+  Arr = lists:map(fun(X) -> get_period(X) end, lists:seq(1, N)),
+  string:str(Arr, [lists:max(Arr)]).
+
+find_number_with_max_period_map() ->
+  find_number_with_max_period_map(1000).

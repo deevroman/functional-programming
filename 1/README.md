@@ -158,7 +158,7 @@ print(max(enumerate(map(get_period, list(range(1, 1000)))), key=lambda x: x[1])[
 
 ```982```
 
-### Реализация с хвостовой рекурсией
+### Реализация рекурсией
 
 ```erlang
 rec_div_five(N) ->
@@ -187,23 +187,19 @@ get_period(X) when X == 0 -> 0;
 
 get_period(X) -> try_period_len(div_five_and_two(X), 10, 1).
 
-pair_max(X, XIndex, Y, YIndex) ->
-  case X > Y of
-    true -> {X, XIndex};
-    false -> {Y, YIndex}
-  end.
+%%% №1
+get_max_period_rec(Index, _) when Index == 1 -> {1, 0};
 
-get_max_period_tail_rec(Index, _) when Index == 1 -> {1, 0};
-
-get_max_period_tail_rec(Index, Acc) when Index > 1 ->
-  {Value, I} = get_max_period_tail_rec(Index - 1, Acc),
+get_max_period_rec(Index, Acc) when Index > 1 ->
+  {Value, I} = get_max_period_rec(Index - 1, Acc),
   pair_max(Value, I, get_period(Index), Index).
 
-find_number_with_max_period_tail_rec(N) ->
-  element(2, get_max_period_tail_rec(N, {1, 0})).
+find_number_with_max_period_rec(N) ->
+  element(2, get_max_period_rec(N, {1, 0})).
 
-find_number_with_max_period_tail_rec() ->
-  find_number_with_max_period_tail_rec(1000).
+find_number_with_max_period_rec() ->
+  find_number_with_max_period_rec(1000).
+
 ```
 
 ### Реализация с fold
@@ -284,17 +280,17 @@ get_period(X) when X == 0 -> 0;
 
 get_period(X) -> try_period_len(div_five_and_two(X), 10, 1).
 
-find_number_with_max_period(N) ->
-  Arr = lists:map(fun(X) -> get_period(X) end, lists:seq(1, N)),
-  string:str(Arr, [lists:max(Arr)]).
+%%% №3
+find_number_with_max_period_map(N) ->
+   Arr = lists:map(fun(X) -> get_period(X) end, lists:seq(1, N)),
+   string:str(Arr, [lists:max(Arr)]).
 
-find_number_with_max_period() ->
-  find_number_with_max_period(1000).
-
+find_number_with_max_period_map() ->
+   find_number_with_max_period_map(1000).
 
 ```
 
 ## Выводы
 
-В ходе выполнения работы я познакомился с языком Erlang и основными принципами функционального программирования.
-Реализовал в нескольких разных стилях две задачи из проекта Эйлер
+В ходе выполнения работы я познакомился с языком Erlang, его средствами разработки и основными принципами функционального программирования.
+Реализовал в нескольких разных стилях две задачи из проекта Эйлер. 
