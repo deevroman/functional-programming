@@ -145,7 +145,6 @@ def get_period(x):
         return 0
     divider, power = 10, 1
     while True:
-        # print(divider, x)
         if divider % x == 1:
             return power
         divider *= 10
@@ -199,7 +198,6 @@ find_number_with_max_period_rec(N) ->
 
 find_number_with_max_period_rec() ->
   find_number_with_max_period_rec(1000).
-
 ```
 
 ### Реализация с fold
@@ -247,8 +245,6 @@ find_number_with_max_period_fold(N) ->
 
 find_number_with_max_period_fold() ->
   find_number_with_max_period_fold(1000).
-
-
 ```
 
 ### Реализация с map
@@ -282,15 +278,15 @@ get_period(X) -> try_period_len(div_five_and_two(X), 10, 1).
 
 %%% №3
 find_number_with_max_period_map(N) ->
-   Arr = lists:map(fun(X) -> get_period(X) end, lists:seq(1, N)),
-   string:str(Arr, [lists:max(Arr)]).
+  Arr = lists:map(fun(X) -> get_period(X) end, lists:seq(1, N)),
+  string:str(Arr, [lists:max(Arr)]).
 
 find_number_with_max_period_map() ->
-   find_number_with_max_period_map(1000).
-
+  find_number_with_max_period_map(1000).
 ```
 
 ## Выводы
 
-В ходе выполнения работы я познакомился с языком Erlang, его средствами разработки и основными принципами функционального программирования.
+В ходе выполнения работы я познакомился с языком Erlang, его средствами разработки и основными принципами
+функционального программирования.
 Реализовал в нескольких разных стилях две задачи из проекта Эйлер. 
