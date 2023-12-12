@@ -5,21 +5,16 @@
 -export([find_number_with_max_period_fold/0]).
 -export([find_number_with_max_period_map/0]).
 
-rec_div_five(N) ->
-  case N rem 5 of
-    0 -> rec_div_five(N div 5);
-    _ -> N
-  end.
+rec_div_five(N) when N rem 5 == 0 -> rec_div_five(N div 5);
 
-rec_div_two(N) ->
-  case N rem 2 of
-    0 -> rec_div_two(N div 2);
-    _ -> N
-  end.
+rec_div_five(N) -> N.
+
+rec_div_two(N) when N rem 2 == 0 -> rec_div_two(N div 2);
+rec_div_two(N) -> N.
 
 div_five_and_two(N) -> rec_div_five(rec_div_two(N)).
 
-try_period_len(N, _, _) when N == 1 -> 0;
+try_period_len(1, _, _) -> 0;
 
 try_period_len(N, Divider, Power) when N > 1 ->
   case Divider rem N of
@@ -27,12 +22,12 @@ try_period_len(N, Divider, Power) when N > 1 ->
     _ -> try_period_len(N, Divider * 10, Power + 1)
   end.
 
-get_period(X) when X == 0 -> 0;
+get_period(0) -> 0;
 
 get_period(X) -> try_period_len(div_five_and_two(X), 10, 1).
 
 %%% №1
-get_max_period_rec(Index, _) when Index == 1 -> {1, 0};
+get_max_period_rec(1, _) -> {1, 0};
 
 get_max_period_rec(Index, Acc) when Index > 1 ->
   {Value, I} = get_max_period_rec(Index - 1, Acc),
