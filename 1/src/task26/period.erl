@@ -6,7 +6,6 @@
 -export([find_number_with_max_period_map/0]).
 
 rec_div_five(N) when N rem 5 == 0 -> rec_div_five(N div 5);
-
 rec_div_five(N) -> N.
 
 rec_div_two(N) when N rem 2 == 0 -> rec_div_two(N div 2);
@@ -14,13 +13,9 @@ rec_div_two(N) -> N.
 
 div_five_and_two(N) -> rec_div_five(rec_div_two(N)).
 
-try_period_len(1, _, _) -> 0;
-
-try_period_len(N, Divider, Power) when N > 1 ->
-  case Divider rem N of
-    1 -> Power;
-    _ -> try_period_len(N, Divider * 10, Power + 1)
-  end.
+try_period_len(N, _, _) when N =< 1 -> 0;
+try_period_len(N, Divider, Power) when Divider rem N == 1 -> Power;
+try_period_len(N, Divider, Power) -> try_period_len(N, Divider * 10, Power + 1).
 
 get_period(0) -> 0;
 
