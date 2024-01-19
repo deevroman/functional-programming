@@ -9,3 +9,12 @@ lcm_tail_rec_test() ->
 
 lcm_reduce_test() ->
   ?assertEqual(lcm:smallest_divisible_reduce(), 232792560).
+
+lcm_inf_list_via_concurrency_map_test() ->
+  ?assertEqual(lcm:smallest_divisible_inf_list_via_concurrency_map(), 232792560).
+
+lcm_inf_list_via_concurrency_fold_test() ->
+  ?assertEqual(lcm:smallest_divisible_inf_list_via_concurrency_fold(), 232792560).
+
+smallest_divisible_inf_lazy_lists_test() ->
+  ?assertEqual(lcm:smallest_divisible_inf_lazy_lists(), 232792560).
