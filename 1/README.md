@@ -248,31 +248,22 @@ print(max(enumerate(map(get_period, list(range(1, 1000)))), key=lambda x: x[1])[
 ### Реализация рекурсией
 
 ```erlang
-rec_div_five(N) ->
-  case N rem 5 of
-    0 -> rec_div_five(N div 5);
-    _ -> N
-  end.
+rec_div_five(N) when N rem 5 == 0 -> rec_div_five(N div 5);
+rec_div_five(N) -> N.
 
-rec_div_two(N) ->
-  case N rem 2 of
-    0 -> rec_div_two(N div 2);
-    _ -> N
-  end.
+rec_div_two(N) when N rem 2 == 0 -> rec_div_two(N div 2);
+rec_div_two(N) -> N.
 
 div_five_and_two(N) -> rec_div_five(rec_div_two(N)).
 
-try_period_len(N, _, _) when N == 1 -> 0;
+try_period_len(N, _, _) when N =< 1 -> 0;
+try_period_len(N, Divider, Power) when Divider rem N == 1 -> Power;
+try_period_len(N, Divider, Power) -> try_period_len(N, Divider * 10, Power + 1).
 
-try_period_len(N, Divider, Power) when N > 1 ->
-  case Divider rem N of
-    1 -> Power;
-    _ -> try_period_len(N, Divider * 10, Power + 1)
-  end.
-
-get_period(X) when X == 0 -> 0;
+get_period(0) -> 0;
 
 get_period(X) -> try_period_len(div_five_and_two(X), 10, 1).
+
 
 %%% №1
 get_max_period_rec(Index, _) when Index == 1 -> {1, 0};
@@ -291,32 +282,22 @@ find_number_with_max_period_rec() ->
 ### Реализация с fold
 
 ```erlang
+rec_div_five(N) when N rem 5 == 0 -> rec_div_five(N div 5);
+rec_div_five(N) -> N.
 
-rec_div_five(N) ->
-  case N rem 5 of
-    0 -> rec_div_five(N div 5);
-    _ -> N
-  end.
-
-rec_div_two(N) ->
-  case N rem 2 of
-    0 -> rec_div_two(N div 2);
-    _ -> N
-  end.
+rec_div_two(N) when N rem 2 == 0 -> rec_div_two(N div 2);
+rec_div_two(N) -> N.
 
 div_five_and_two(N) -> rec_div_five(rec_div_two(N)).
 
-try_period_len(N, _, _) when N == 1 -> 0;
+try_period_len(N, _, _) when N =< 1 -> 0;
+try_period_len(N, Divider, Power) when Divider rem N == 1 -> Power;
+try_period_len(N, Divider, Power) -> try_period_len(N, Divider * 10, Power + 1).
 
-try_period_len(N, Divider, Power) when N > 1 ->
-  case Divider rem N of
-    1 -> Power;
-    _ -> try_period_len(N, Divider * 10, Power + 1)
-  end.
-
-get_period(X) when X == 0 -> 0;
+get_period(0) -> 0;
 
 get_period(X) -> try_period_len(div_five_and_two(X), 10, 1).
+
 
 pair_max(X, XIndex, Y, YIndex) ->
   case X > Y of
@@ -338,31 +319,22 @@ find_number_with_max_period_fold() ->
 ### Реализация с map
 
 ```erlang
-rec_div_five(N) ->
-  case N rem 5 of
-    0 -> rec_div_five(N div 5);
-    _ -> N
-  end.
+rec_div_five(N) when N rem 5 == 0 -> rec_div_five(N div 5);
+rec_div_five(N) -> N.
 
-rec_div_two(N) ->
-  case N rem 2 of
-    0 -> rec_div_two(N div 2);
-    _ -> N
-  end.
+rec_div_two(N) when N rem 2 == 0 -> rec_div_two(N div 2);
+rec_div_two(N) -> N.
 
 div_five_and_two(N) -> rec_div_five(rec_div_two(N)).
 
-try_period_len(N, _, _) when N == 1 -> 0;
+try_period_len(N, _, _) when N =< 1 -> 0;
+try_period_len(N, Divider, Power) when Divider rem N == 1 -> Power;
+try_period_len(N, Divider, Power) -> try_period_len(N, Divider * 10, Power + 1).
 
-try_period_len(N, Divider, Power) when N > 1 ->
-  case Divider rem N of
-    1 -> Power;
-    _ -> try_period_len(N, Divider * 10, Power + 1)
-  end.
-
-get_period(X) when X == 0 -> 0;
+get_period(0) -> 0;
 
 get_period(X) -> try_period_len(div_five_and_two(X), 10, 1).
+
 
 %%% №3
 find_number_with_max_period_map(N) ->
@@ -378,3 +350,5 @@ find_number_with_max_period_map() ->
 В ходе выполнения работы я познакомился с языком Erlang, его средствами разработки и базовыми принципами
 функционального программирования.
 Реализовал в нескольких разных стилях две задачи из проекта Эйлер. 
+
+[К другим лабам](/)
