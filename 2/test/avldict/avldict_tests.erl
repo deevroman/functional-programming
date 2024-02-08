@@ -143,30 +143,30 @@ all_inserts_perms_test_() ->
 placement_with_repetitions4_test() ->
   L = lists:seq(1, 4),
   A = [[{X, 0}, {Y, 0}, {Z, 0}, {Q, 0}] || X <- L, Y <- L, Z <- L, Q <- L],
-  lists:map(fun(L) -> insert_all(L) end, A).
+  lists:map(fun insert_all/1, A).
 
 placement_with_repetitions5_test() ->
   L = lists:seq(1, 5),
   A = [
     [{X, 0}, {Y, 0}, {Z, 0}, {Q, 0}, {W, 0}]
     || X <- L, Y <- L, Z <- L, Q <- L, W <- L],
-  lists:map(fun(L) -> insert_all(L) end, A).
+  lists:map(fun insert_all/1, A).
 
 placement_with_repetitions6_test() ->
   L = lists:seq(1, 6),
   A = [
     [{X, 0}, {Y, 0}, {Z, 0}, {Q, 0}, {W, 0}, {E, 0}]
     || X <- L, Y <- L, Z <- L, Q <- L, W <- L, E <- L],
-  lists:map(fun(L) -> insert_all(L) end, A).
+  lists:map(fun insert_all/1, A).
 
 placement_with_repetitions7_test() ->
   L = lists:seq(1, 7),
   A = [
     [{X, 0}, {Y, 0}, {Z, 0}, {Q, 0}, {W, 0}, {E, 0}, {R, 0}]
     || X <- L, Y <- L, Z <- L, Q <- L, W <- L, E <- L, R <- L],
-  lists:map(fun(L) -> insert_all(L) end, A).
+  lists:map(fun insert_all/1, A).
 
-%% Тесты дополнительных функций, которое должно поддерживать дерево
+%% Тесты дополнительных функций, которые должен поддерживать словарь
 map_tree_test() ->
   L = [{I, 0} || I <- lists:seq(1, 20)],
   T = avldict:from_list(L),
@@ -208,8 +208,8 @@ monoid_neutral_elem_test() ->
   R2 = avldict:merge(avldict:empty_tree(), T),
   ?assertEqual(T, R2).
 
-%% ... и должна существовать ассоциативная операция умножения
-%% ею является слияния деревьев
+%% ... и должна существовать ассоциативная операция умножения,
+%% которой является слияния деревьев
 
 monoid_assoc_test_case(ASize, BSize, CSize) ->
   A = avldict:from_list([{random:uniform(30), random:uniform(100)} || _ <- lists:seq(1, ASize)]),
