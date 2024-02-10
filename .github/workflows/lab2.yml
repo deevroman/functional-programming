@@ -11,6 +11,9 @@ jobs:
         with:
           otp-version: '26'
           rebar3-version: '3.22.1'
+      - name: Format
+        run: rebar3 format -v
+        working-directory: ${{github.workspace}}/2
       - name: Lint
         run: rebar3 lint
         working-directory: ${{github.workspace}}/2
