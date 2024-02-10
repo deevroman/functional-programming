@@ -207,13 +207,16 @@ foldr_tree_test() ->
 %% Свойство 3. AVL-Dict должен быть моноидом
 %% А значит, должен быть единичный элемент...
 
-monoid_neutral_elem_test() ->
-    T = avldict:from_list([{1, 1}, {2, 2}, {3, 3}, {4, 4}]),
+monoid_neutral_elem_case(TSize) ->
+    T = avldict:from_list([{random:uniform(30), 0} || _ <- lists:seq(1, TSize)]),
     R = avldict:merge(T, avldict:empty_tree()),
-    ?assertEqual(T, R),
+    ?assertEqual(avldict:to_list(T), avldict:to_list(R)),
     R2 = avldict:merge(
              avldict:empty_tree(), T),
-    ?assertEqual(T, R2).
+    ?assertEqual(avldict:to_list(T), avldict:to_list(R2)).
+
+monoid_neutral_elem_test() ->
+    [monoid_neutral_elem_case(random:uniform(1000) - 1) || _ <- lists:seq(1, 10000)].
 
 %% ... и должна существовать ассоциативная операция умножения,
 %% которой является слияния деревьев
