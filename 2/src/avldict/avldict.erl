@@ -21,10 +21,10 @@ empty_tree() ->
 find(_Key, ?NIL) ->
     not_found;
 find(Key, {Key, Value, _, _, _}) ->
-    Value;
+    {Key, Value};
 find(Key, {Key1, _, _, Smaller, _}) when Key < Key1 ->
     find(Key, Smaller);
-find(Key, {Key1, _, _, Bigger}) when Key > Key1 ->
+find(Key, {Key1, _, _, _, Bigger}) when Key > Key1 ->
     find(Key, Bigger).
 
 insert(Key, Value, ?NIL) ->

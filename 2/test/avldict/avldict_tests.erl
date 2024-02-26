@@ -36,7 +36,7 @@ one_node_test() ->
     Target = {1, 2, 1, ?NIL, ?NIL},
     ?assertEqual(T, Target),
     ?assertEqual(avldict:find(0, T), not_found),
-    ?assertEqual(avldict:find(1, T), 2).
+    ?assertEqual(avldict:find(1, T), {1, 2}).
 
 two_node_test() ->
     T1 = avldict:insert(1, 1, avldict:empty_tree()),
