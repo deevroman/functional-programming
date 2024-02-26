@@ -42,7 +42,7 @@ two_node_test() ->
     T1 = avldict:insert(1, 1, avldict:empty_tree()),
     T2 = avldict:insert(2, 2, T1),
     Target = {1, 1, 2, ?NIL, {2, 2, 1, ?NIL, ?NIL}},
-    ?assertEqual(T2, Target).
+    ?assertEqual(Target, T2).
 
 simple_tree_test() ->
     L = [{1, 2}, {2, 3}, {4, 5}, {6, 7}, {8, 9}, {10, 11}],
@@ -52,7 +52,9 @@ simple_tree_test() ->
          3,
          {2, 3, 2, {1, 2, 1, ?NIL, ?NIL}, {4, 5, 1, ?NIL, ?NIL}},
          {8, 9, 2, ?NIL, {10, 11, 1, ?NIL, ?NIL}}},
-    ?assertEqual(avldict:from_list(L), Target).
+    ?assertEqual(true,
+                 avldict:equal_tree(
+                     avldict:from_list(L), Target)).
 
 big_insert_test() ->
     L = [{random:uniform(1_000_000), 0} || _ <- lists:seq(1, 1_000_000)],

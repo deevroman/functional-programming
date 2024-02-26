@@ -1,7 +1,7 @@
 -module(avldict).
 
 -export([empty_tree/0, insert/3, remove/2, find/2, from_list/1, to_list/1, merge/2,
-         map_tree/2, filter_tree/2, foldl/3, foldr/3]).
+         map_tree/2, filter_tree/2, foldl/3, foldr/3, equal_tree/2]).
 
 -define(KEY(Node), element(1, Node)).
 -define(VALUE(Node), element(2, Node)).
@@ -27,113 +27,104 @@ find(Key, {Key1, _, _, Smaller, _}) when Key < Key1 ->
 find(Key, {Key1, _, _, _, Bigger}) when Key > Key1 ->
     find(Key, Bigger).
 
-insert(Key, Value, ?NIL) ->
-    {Key, Value, 1, ?NIL, ?NIL};
-insert(Key, Value, {K2, _V2, H2, S2, B2}) when Key == K2 ->
-    {Key, Value, H2, S2, B2};
-insert(Key, Value, {K2, V2, _H2, S2, B2}) when Key < K2 ->
-    {K4, V4, _, S4, B4} = insert(Key, Value, S2),
-    balance(S4, K4, V4, B4, K2, V2, B2);
-insert(Key, Value, {K2, V2, _H2, S2, B2}) when Key > K2 ->
-    {K4, V4, _, S4, B4} = insert(Key, Value, B2),
-    balance(S2, K2, V2, S4, K4, V4, B4).
+insert(NewKey, NewVal, ?NIL) ->
+    {NewKey, NewVal, 1, ?NIL, ?NIL};
+insert(NewKey, NewVal, {Key, _Val, H, Smaller, Bigger}) when NewKey == Key ->
+    {NewKey, NewVal, H, Smaller, Bigger};
+insert(NewKey, NewVal, {Key, Val, H, S, B}) when NewKey < Key ->
+    NewSmaller = insert(NewKey, NewVal, S),
+    balance({Key, Val, max(?HEIGHT(NewSmaller) + 1, H), NewSmaller, B});
+insert(NewKey, NewVal, {Key, Val, H, S, B}) when NewKey > Key ->
+    NewBigger = insert(NewKey, NewVal, B),
+    balance({Key, Val, max(?HEIGHT(NewBigger) + 1, H), S, NewBigger}).
 
-balance({K1, V1, H1, S1, B1}, AK, AV, {K2, V2, H2, S2, B2}, BK, BV, {K3, V3, H3, S3, B3})
-    when H2 > H1, H2 > H3 ->
-    {K2,
-     V2,
-     H1 + 2,
-     {AK, AV, H1 + 1, {K1, V1, H1, S1, B1}, S2},
-     {BK, BV, H3 + 1, B2, {K3, V3, H3, S3, B3}}};
-balance({K1, V1, H1, S1, B1}, AK, AV, {K2, V2, H2, S2, B2}, BK, BV, {K3, V3, H3, S3, B3})
-    when H1 >= H2, H1 >= H3 ->
-    HB = max(H2, H3) + 1,
-    HA = max(H1, HB) + 1,
-    {AK,
-     AV,
-     HA,
-     {K1, V1, H1, S1, B1},
-     {BK, BV, HB, {K2, V2, H2, S2, B2}, {K3, V3, H3, S3, B3}}};
-balance({K1, V1, H1, S1, B1}, AK, AV, {K2, V2, H2, S2, B2}, BK, BV, {K3, V3, H3, S3, B3})
-    when H3 >= H1, H3 >= H2 ->
-    HA = max(H1, H2) + 1,
-    HB = max(HA, H3) + 1,
-    {BK,
-     BV,
-     HB,
-     {AK, AV, HA, {K1, V1, H1, S1, B1}, {K2, V2, H2, S2, B2}},
-     {K3, V3, H3, S3, B3}}.
+balance({_, _, _, S, B} = T) when abs(?HEIGHT(S) - ?HEIGHT(B)) =/= 2 ->
+    T;
+balance({Key, Val, _H, {KeyS, ValS, _HS, SS, SB}, B})
+    when ?HEIGHT(SS) == ?HEIGHT(B) + 1 ->
+    NewHB = max(?HEIGHT(B), ?HEIGHT(SB)) + 1,
+    {KeyS, ValS, max(NewHB, ?HEIGHT(SS)) + 1, SS, {Key, Val, NewHB, SB, B}};
+balance({Key, Val, _H, S, {KeyB, ValB, _HB, BS, BB}})
+    when ?HEIGHT(BB) == ?HEIGHT(S) + 1 ->
+    NewHS = max(?HEIGHT(S), ?HEIGHT(BS)) + 1,
+    {KeyB, ValB, max(NewHS, ?HEIGHT(BB)) + 1, {Key, Val, NewHS, S, BS}, BB};
+balance({Key, Val, _H, {KeyS, ValS, _HS, SS, {KeySB, ValSB, HSB, SBS, SBB}}, B})
+    when HSB == ?HEIGHT(B) + 1 ->
+    HSS = ?HEIGHT(SS),
+    {KeySB, ValSB, HSS + 2, {KeyS, ValS, HSS + 1, SS, SBS}, {Key, Val, HSS + 1, SBB, B}};
+balance({Key, Val, _H, S, {KeyB, ValB, _HB, {KeyBS, ValBS, HBS, BSS, BSB}, BB}})
+    when HBS == ?HEIGHT(S) + 1 ->
+    HBB = ?HEIGHT(BB),
+    {KeyBS, ValBS, HBB + 2, {Key, Val, HBB + 1, S, BSS}, {KeyB, ValB, HBB + 1, BSB, BB}}.
 
-remove_min({Key, Value, _, ?NIL, B}) ->
-    {{Key, Value, nil, nil, nil}, B, true};
-remove_min({Key, Value, _, S, ?NIL}) ->
-    {S, {Key, Value, 1, ?NIL, ?NIL}, true};
-remove_min({Key, Value, _, Smaller, Bigger}) ->
-    {Min, {K, V, H, S, B}, IsLastCall} = remove_min(Smaller),
-    {KB, VB, HB, SB, BB} = Bigger,
-    case {IsLastCall, {K, V, H, S, B}, BB, HB} of
+remove_min({Key, Val, _, ?NIL, B}) ->
+    {{Key, Val, nil, nil, nil}, B, true};
+remove_min({Key, Val, _, S, ?NIL}) ->
+    {S, {Key, Val, 1, ?NIL, ?NIL}, true};
+remove_min({Key, Val, _, Smaller, {KB, VB, HB, SB, BB} = Bigger}) ->
+    {Min, NewS, IsLastCall} = remove_min(Smaller),
+    case {IsLastCall, NewS, BB, HB} of
         {true, ?NIL, ?NIL, 2} ->
             {Min,
-             {?KEY(SB), ?VALUE(SB), 2, {Key, Value, 1, ?NIL, ?NIL}, {KB, VB, 1, ?NIL, ?NIL}},
+             {?KEY(SB), ?VALUE(SB), 2, {Key, Val, 1, ?NIL, ?NIL}, {KB, VB, 1, ?NIL, ?NIL}},
              false};
         {true, ?NIL, _, _} ->
             {Min,
              {KB,
               VB,
               max(?HEIGHT(SB) + 1, ?HEIGHT(BB)) + 1,
-              {Key, Value, ?HEIGHT(SB) + 1, ?NIL, SB},
+              {Key, Val, ?HEIGHT(SB) + 1, ?NIL, SB},
               BB},
              false};
         _ ->
-            {Min, balance({K, V, H, S, B}, Key, Value, SB, KB, VB, BB), false}
+            {Min, balance({Key, Val, max(?HEIGHT(NewS), HB) + 1, NewS, Bigger}), false}
     end.
 
-rm(_Key, ?NIL) ->
+do_remove(_Key, ?NIL) ->
     not_found;
-rm(Key, {Key, _Value, _, ?NIL, ?NIL}) ->
+do_remove(TargetKey, {TargetKey, _Val, _, ?NIL, ?NIL}) ->
     ?NIL;
-rm(Key, {Key, _Value, _, S, ?NIL}) ->
+do_remove(TargetKey, {TargetKey, _Val, _, S, ?NIL}) ->
     S;
-rm(Key, {Key, _Value, _, ?NIL, B}) ->
+do_remove(TargetKey, {TargetKey, _Val, _, ?NIL, B}) ->
     B;
-rm(Key, {Key, _Value, _, Smaller, Bigger}) ->
+do_remove(TargetKey, {TargetKey, _Val, _, Smaller, Bigger}) ->
     {Min, NewBigger, _} = remove_min(Bigger),
     case Min of
         ?NIL ->
             ?NIL;
         {MinK, MinV, _, _, _} ->
-            {KS, VS, _, SS, BS} = Smaller,
-            balance(SS, KS, VS, BS, MinK, MinV, NewBigger)
+            balance({MinK, MinV, max(?HEIGHT(Smaller), ?HEIGHT(NewBigger)) + 1, Smaller, NewBigger})
     end;
-rm(Key, {Key1, Value1, _H1, Smaller, Bigger}) when Key < Key1 ->
-    R = rm(Key, Smaller),
-    case {R, Bigger} of
+do_remove(TargetKey, {Key, Val, _H, Smaller, Bigger}) when TargetKey < Key ->
+    NewS = do_remove(TargetKey, Smaller),
+    case {NewS, Bigger} of
         {not_found, _} ->
             not_found;
         {?NIL, ?NIL} ->
-            {Key1, Value1, 1, ?NIL, ?NIL};
-        {_, {K4, V4, _, S4, B4}} ->
-            balance(R, Key1, Value1, S4, K4, V4, B4)
+            {Key, Val, 1, ?NIL, ?NIL};
+        {_, _} ->
+            balance({Key, Val, max(?HEIGHT(NewS), ?HEIGHT(Bigger)) + 1, NewS, Bigger})
     end;
-rm(Key, {Key1, Value1, _H1, Smaller, Bigger}) when Key > Key1 ->
-    R = rm(Key, Bigger),
-    case {Smaller, R} of
+do_remove(TargetKey, {Key, Val, _H, Smaller, Bigger}) when TargetKey > Key ->
+    NewB = do_remove(TargetKey, Bigger),
+    case {Smaller, NewB} of
         {_, not_found} ->
             not_found;
         {?NIL, ?NIL} ->
-            {Key1, Value1, 1, ?NIL, ?NIL};
-        {{K4, V4, _, S4, B4}, _} ->
-            balance(S4, K4, V4, B4, Key1, Value1, R)
+            {Key, Val, 1, ?NIL, ?NIL};
+        {_, _} ->
+            balance({Key, Val, max(?HEIGHT(Smaller), ?HEIGHT(NewB)) + 1, Smaller, NewB})
     end.
 
-remove(K, T) ->
-    case rm(K, T) of
+remove(Key, Tree) ->
+    case do_remove(Key, Tree) of
         not_found ->
-            T;
-        {_, NewT, _} ->
-            NewT;
-        NewT ->
-            NewT
+            Tree;
+        {_, NewTree, _} ->
+            NewTree;
+        NewTree ->
+            NewTree
     end.
 
 from_list(L) ->
@@ -178,3 +169,13 @@ foldr({K, V, _, S, B}, F, Acc) ->
 
 merge(X, Y) ->
     foldl(Y, fun(AccNode, {K, V}) -> avldict:insert(K, V, AccNode) end, X).
+
+equal_tree(A, B) ->
+    LenA = foldl(A, fun(Acc, _) -> Acc + 1 end, 0),
+    LenB = foldl(B, fun(Acc, _) -> Acc + 1 end, 0),
+    case LenA =:= LenB of
+        false ->
+            false;
+        _ ->
+            foldl(B, fun(Acc, {K, V}) -> Acc and (find(K, A) =:= {K, V}) end, true)
+    end.
