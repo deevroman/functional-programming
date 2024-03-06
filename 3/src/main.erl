@@ -7,7 +7,11 @@
 -import(lagrange, []).
 -import(gauss, []).
 
--export([]).
+-export([main/0]).
+-export([main/1]).
+
+main() ->
+    main(["-m", "lagrange"]).
 
 main(Args) ->
     argparse:run(Args, cli(), #{progname => lab3}).
@@ -33,26 +37,18 @@ cli() ->
                 w := WindowLen,
                 m := Methods} =
                   Args) ->
-             io:format("~p~n", [Args]),
              OutputPid = output:start(),
-             link(OutputPid),
              Workers =
                  lists:map(fun(Method) ->
                               case Method of
                                   linear ->
-                                      Pid = linear:start(OutputPid, Step),
-                                      link(Pid),
-                                      Pid;
+                                      linear:start(OutputPid, Step);
                                   lagrange ->
-                                      Pid = lagrange:start(OutputPid, Step, WindowLen),
-                                      link(Pid),
-                                      Pid;
+                                      lagrange:start(OutputPid, Step, WindowLen);
                                   gauss ->
-                                      Pid = gauss:start(OutputPid, Step, WindowLen),
-                                      link(Pid),
-                                      Pid;
+                                      gauss:start(OutputPid, Step, WindowLen);
                                   _ ->
-                                      io:format("~p~n", [Method])
+                                      io:format("Unknown method: ~p~n", [Method])
                               end
                            end,
                            Methods),
@@ -61,9 +57,16 @@ cli() ->
           end}.
 
 wait_processes(InputPid, OutputPid, Workers) ->
-    case {erlang:process_info(InputPid), erlang:process_info(OutputPid)} of
-        {undefined, undefined} ->
+    case {erlang:process_info(InputPid),
+          erlang:process_info(OutputPid),
+          lists:all(fun(W) -> erlang:process_info(W) == undefined end, Workers)}
+    of
+        {undefined, undefined, true} ->
+            io:format("End.", []),
             exit;
+        {undefined, _, true} ->
+            OutputPid ! {stop, nil, self()},
+            wait_processes(InputPid, OutputPid, Workers);
         _ ->
             wait_processes(InputPid, OutputPid, Workers)
     end.

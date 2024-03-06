@@ -8,11 +8,11 @@ start(Workers) ->
 loop(Workers) ->
     case io:get_line("") of
         eof ->
-            [Pid ! {stop, nil, self()} || Pid <- Workers];
+            [Worker ! {stop, nil, self()} || Worker <- Workers];
         Line ->
-            [Pid ! {new_point, parse_point(Line), self()} || Pid <- Workers]
-    end,
-    loop(Workers).
+            [Worker ! {new_point, parse_point(Line), self()} || Worker <- Workers],
+            loop(Workers)
+    end.
 
 parse_point(Line) ->
     XY = string:tokens(

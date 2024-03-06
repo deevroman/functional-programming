@@ -83,6 +83,24 @@ o o o o o o . . x x x
 
 ## Выполнение
 
+#### Дерево потоков
+![](img/thread_tree.png)
+
+#### Схема работы
+![](img/schema.png)
+
+- Точка входа в программу: [src/main.erl](src/main.erl)
+- Линейная интерполяция: [src/main.erl](src/linear.erl)
+- Метод Лагранжа: [src/main.erl](src/lagrange.erl)
+- Метод Гаусса: [src/main.erl](src/gauss.erl)
+- Работа с вводом: [src/main.erl](src/input.erl)
+- Работа с выводом: [src/main.erl](src/gauss.erl)
+
+#### Примеры работы
+
+
 
 ## Выводы
+
+Реализовал методы интерполяции на Erlang в необычном для себя виде: в интерактивном, потоковом и конвейрном виде. Работа с числами в Erlang неудобная, но работа с потоками радует.
 
