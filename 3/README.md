@@ -90,11 +90,11 @@ o o o o o o . . x x x
 ![](img/schema.png)
 
 - Точка входа в программу: [src/main.erl](src/main.erl)
-- Линейная интерполяция: [src/main.erl](src/linear.erl)
-- Метод Лагранжа: [src/main.erl](src/lagrange.erl)
-- Метод Гаусса: [src/main.erl](src/gauss.erl)
-- Работа с вводом: [src/main.erl](src/input.erl)
-- Работа с выводом: [src/main.erl](src/gauss.erl)
+- Линейная интерполяция: [src/linear.erl](src/linear.erl)
+- Метод Лагранжа: [src/lagrange.erl](src/lagrange.erl)
+- Метод Гаусса: [src/gauss.erl](src/gauss.erl)
+- Работа с вводом: [src/input.erl](src/input.erl)
+- Работа с выводом: [src/output.erl](src/output.erl)
 
 ### Примеры работы
 
