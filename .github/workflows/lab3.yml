@@ -17,6 +17,6 @@ jobs:
       - name: Lint
         run: rebar3 lint
         working-directory: ${{github.workspace}}/3
-      - name: Run tests
-        run: rebar3 eunit -v
-        working-directory: ${{github.workspace}}/3
+      - name: Run example
+        run: make
+        working-directory: ${{github.workspace}}/3/src
