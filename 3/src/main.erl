@@ -35,8 +35,7 @@ cli() ->
       handler =>
           fun(#{s := Step,
                 w := WindowLen,
-                m := Methods} =
-                  Args) ->
+                m := Methods}) ->
              OutputPid = output:start(),
              Workers =
                  lists:map(fun(Method) ->
