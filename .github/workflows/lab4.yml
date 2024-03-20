@@ -13,7 +13,7 @@ jobs:
           rebar3-version: '3.22.1'
       - name: Format
         run: rebar3 format --verify
-        working-directory: ${{github.workspace}}/4/lab4
+        working-directory: ${{github.workspace}}/4
       - name: Lint
         run: rebar3 lint
-        working-directory: ${{github.workspace}}/4/lab4
+        working-directory: ${{github.workspace}}/4
