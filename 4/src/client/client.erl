@@ -14,13 +14,12 @@ start(Host, Port, Nickname) ->
 
     logger:info("Client ~p connects to ~s:~p~n", [self(), Host, Port]),
     case gen_tcp:connect(Host, Port, [binary, {active, true}, {packet, 2}]) of
-      {ok, Socket} ->
-        connect(self(), Nickname),
-        loop(Socket, Nickname);
-      {error, _} ->
-        io:format("There is no connection to the server. Type <host> <port> again:~n", [])
+        {ok, Socket} ->
+            connect(self(), Nickname),
+            loop(Socket, Nickname);
+        {error, _} ->
+            io:format("There is no connection to the server. Type <host> <port> again:~n", [])
     end.
-
 
 connect(Pid, Nickname) ->
     send(Pid, {connect, Nickname}).
