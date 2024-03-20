@@ -12,16 +12,10 @@ start([Port]) ->
                          {type, ordered_set},
                          {disc_copies, [node()]}]),
     spawn(?MODULE, server, [list_to_integer(atom_to_list(Port))]),
-    loop().
-
-loop() ->
-    receive
-        _ ->
-            loop()
-    end.
+    timer:sleep(infinity).
 
 server(Port) ->
-    %%    io:format("start server at port ~p~n", [Port]),
+    logger:info("start server at port ~p~n", [Port]),
     {ok, ListenSocket} =
         gen_tcp:listen(Port, [binary, {active, false}, {packet, 2}, {reuseaddr, true}]),
     [spawn(?MODULE, accept, [Id, ListenSocket]) || Id <- lists:seq(1, 5)],
