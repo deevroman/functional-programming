@@ -6,6 +6,9 @@ main([ServerPort]) ->
     broadcaster:start_link(),
     ServerPid = spawn(server, start, [[ServerPort]]),
     link(ServerPid),
+    ask_user().
+
+ask_user() ->
     io:format("Type <host> <port> for connection~n"),
     [Host, Port] =
         string:tokens(
@@ -43,7 +46,7 @@ process_line(Line, ClientPid, Nickname) ->
         "!send" ->
             client:send_message(ClientPid, Nickname, string:join(Args, ""));
         "!recon" ->
-            ok;
+            exit(reconnect);
         _ ->
             io:format("Unknow command: '~s'~n", [Line])
     end.
