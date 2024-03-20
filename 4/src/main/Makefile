@@ -1,4 +1,4 @@
-# example client for demo
+# example clients for demo
 
 compile:
 	erlc ../broadcaster/broadcaster.erl ../client/client.erl ../server/server.erl main.erl
